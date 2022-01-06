@@ -1,12 +1,18 @@
 const {response, request} = require('express')
 
-const usersGet = (req, res = response)=>{
+const usersGet = (req = request, res = response)=>{
+    const { q, name = "No name", apikey, page = 1, limit } = req.query;
     res.json({
-        "msg": "get API - controller"
+        "msg": "get API - controller",
+        q,
+        name,
+        apikey,
+        page,
+        limit
     })
 }
 
-const usersPost = (req = request, res)=>{
+const usersPost = (req, res = response)=>{
     const { name, age} = req.body //El destructuring funciona como una pequeña validacion
     res.status(201).json({
         msg:"post API - usuariosPost",
@@ -16,8 +22,10 @@ const usersPost = (req = request, res)=>{
 }
 
 const usersPut = (req, res = response)=>{
+    const {id} = req.params
     res.status(400).json({
-        "msg": "put API - controller"
+        "msg": "put API - controller",
+        id
     })
 }
 
