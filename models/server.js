@@ -6,7 +6,7 @@ class Server{
 
     constructor(){
         this.app = express();
-        this.port = process.env.PORT
+        this.port = process.env.PORT;
         this.usersPath = '/api/users';
         //Middlewares
         this.middlewares();
@@ -21,7 +21,7 @@ class Server{
         this.app.use( cors() );
 
         //Parse and reading body
-        this.app.use( express.json() )
+        this.app.use( express.json() );
 
         //Public Folder
         this.app.use( express.static('public') );

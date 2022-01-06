@@ -7,16 +7,14 @@ const { usersGet,
 
 const router = Router();
 
-router.get('/', usersGet)
+router.get('/', usersGet);
 
-router.put('/:id', usersPut)
+router.put('/:id', usersPut);
 
-router.post('/', usersPost)
+router.post('/', usersPost);
 
-router.delete('/', usersDelete)
+router.delete('/', usersDelete);
 
-router.patch('/', usersPatch)
-
-
+router.patch('/', usersPatch);
 
 module.exports = router;
