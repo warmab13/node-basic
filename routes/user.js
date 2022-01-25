@@ -13,6 +13,7 @@ const router = Router();
 
 router.get('/', usersGet);
 
+//Validations for put
 router.put('/:id', [
         check('id', 'This is not a valid id').isMongoId(),
         check('id').custom( existUserById ),
