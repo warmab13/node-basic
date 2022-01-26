@@ -7,7 +7,7 @@ const {
         validateJWT,
         isAdminRole,
         hasRole
-} = require('../middlewares')
+} = require('../middlewares');
 
 const { usersGet, 
         usersPut, 
