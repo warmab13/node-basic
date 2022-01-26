@@ -70,7 +70,11 @@ const usersDelete = async (req, res)=>{
     //Delete physic
     //const user = await User.findOneAndDelete( id );
 
-    const user = await User.findOneAndUpdate( id, { status: false } );
+    //const uid = req.uid;
+
+    //const authUser = req.user
+
+    const user = await User.findOneAndUpdate( {_id: id}, { status: false } );
 
     res.json({
         user
