@@ -7,7 +7,7 @@ const validateJWT = async(req = request, res = response, next)=>{
 
     if( !token ){
         return res.status(401).json({
-            msg: 'We didnt recieve token'
+            msg: 'Authorization token is not present'
         })
     }
 
@@ -17,7 +17,6 @@ const validateJWT = async(req = request, res = response, next)=>{
 
         //Read user from uid
         const user = await User.findOne({_id: uid})
-        console.log("User", user)
         req.user = user
         req.uid = uid;
 
