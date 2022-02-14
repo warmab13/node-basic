@@ -1,7 +1,6 @@
 const { response } = require("express")
 
 const isAdminRole = (req, res = response, next)=>{
-
     if( !req.user ){
         return res.status(500).json({
             msg: 'We need to verify first the token and later the role'
