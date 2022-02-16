@@ -1,8 +1,11 @@
-const { response } = require("express");
 const path = require("path");
 const fs  = require("fs");
+const cloudinary = require('cloudinary').v2;
+cloudinary.config( process.env.CLOUDINARY_URL );
+const { response } = require("express");
 const { uploadFile } = require("../helpers/upload-file");
 const { User, Product } = require('../models');
+
 
 const uploadFiles = async (req, res = response )=>{
    try {
@@ -66,6 +69,56 @@ const updateImage = async( req, res = response )=>{
     res.json(model);
 }
 
+const updateImageCloudinary = async( req, res = response )=>{
+    const { collection, id } = req.params;
+
+    let model;
+
+    switch ( collection ){
+        case 'users':
+            console.log('Inside users')
+            model = await User.findById(id);
+            if( !model ){
+                return res.status(400).json({
+                    msg: `This user ID ${id} does not exist`
+                })
+            }
+            break;
+        
+        case 'products':
+            console.log('Inside products')
+            model = await Product.findById(id);
+            console.log(model)
+            if( !model ){
+                return res.status(400).json({
+                    msg: `This product ID ${id} does not exist`
+                })
+            }
+            break;
+        
+        default:
+            return res.status(500).json({msg: 'Forgot to validate this'});
+    }
+
+    if( model.img ){
+        const nameArr = model.img.split('/');
+        const name    = nameArr[ nameArr.length - 1 ];
+        const [ public_id ]      = name.split('.')
+        cloudinary.uploader.destroy( public_id );
+    }
+
+    const { tempFilePath } = req.files.file;
+    const { secure_url } = await cloudinary.uploader.upload( tempFilePath )
+
+
+    model.img = secure_url; 
+
+    await model.save();
+
+    res.json(model);
+}
+
+
 const showImage = async (req, res = response) =>{
     const { id, collection } = req.params;
 
@@ -113,5 +166,6 @@ const showImage = async (req, res = response) =>{
 module.exports = {
     uploadFiles,
     updateImage,
-    showImage
+    showImage,
+    updateImageCloudinary
 }
