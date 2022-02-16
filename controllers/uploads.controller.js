@@ -7,11 +7,18 @@ const uploadFiles = async (req, res = response )=>{
         return;
     }
 
-   const name = await uploadFile( req.files );
+   try {
+       
+    //const name = await uploadFile( req.files, ['txt', 'md'], 'textos' );
 
-   res.json({
-       name
-   })
+    const name = await uploadFile( req.files, undefined, 'imgs' );
+
+    res.json({name});
+
+   } catch (error) {
+       res.status(400).json({error});
+   }
+
 }
 
 module.exports = {
