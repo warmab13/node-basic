@@ -30,6 +30,16 @@ const existCategoryById = async ( id ) =>{
     }
 }
 
+/* Validate allowed Collections */
+const allowedCollections = async( collection = '', collections = [])=>{
+     const include = collections.includes( collection );
+     if( !include ){
+        throw new Error(`This collection is no allowed - ${collections}`)
+    }
+
+    return true;
+}
+
 const existProductById = async ( id ) =>{
     const existProduct = await Product.findById( id );
     if( !existProduct ){
@@ -42,5 +52,6 @@ module.exports = {
     existsEmail,
     existUserById,
     existCategoryById,
-    existProductById
+    existProductById,
+    allowedCollections
 }
