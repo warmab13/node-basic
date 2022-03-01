@@ -2,12 +2,18 @@ const express = require('express')
 const cors = require('cors')
 const { dbConnection } = require('../database/config');
 const fileUpload = require('express-fileupload');
+const { socketController } = require('../sockets/socket.controller');
 
 class Server{
 
     constructor(){
-        this.app = express();
-        this.port = process.env.PORT;
+        this.app    = express();
+        this.port   = process.env.PORT;
+
+        //Init SocketIO Implementation
+        this.server = require('http').createServer( this.app );
+        this.io     = require('socket.io')(this.server);
+
         this.paths = {
             auth:       '/api/auth',
             users:      '/api/users',
@@ -25,6 +31,9 @@ class Server{
 
         //Application Routes
         this.routes();
+
+        //Sockets
+        this.socketsEvents();
     }
 
     async dbConnect(){
@@ -60,8 +69,12 @@ class Server{
         this.app.use(this.paths.uploads, require('../routes/uploads'))
     }
 
+    socketsEvents(){
+        this.io.on("connection", socketController );
+    }
+
     listen(){
-        this.app.listen(this.port, ()=>{
+        this.server.listen(this.port, ()=>{
             console.log("Servidor corriendo en puerto", this.port)
         })
     }
