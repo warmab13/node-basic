@@ -49,11 +49,9 @@ const connectSocket = async()=>{
         console.log('Sockets offline');
     });
 
-    socket.on('recieve-messages', ()=>{
-        // TODO:
-    })
+    socket.on('recieve-messages', drawMessages); //Cuando se pasa la funcion sola es que va a recibir todo lo que ya trae retornando el evento del socket. 
 
-    socket.on('active-users', drawUsers)
+    socket.on('active-users', drawUsers);
 
     socket.on('private-message', ()=>{
         // TODO:
@@ -75,6 +73,33 @@ const drawUsers = ( users = [] ) =>{
 
     ulUsers.innerHTML = usersHtml;
 }
+
+const drawMessages = ( messages = [] ) =>{
+    let messagesHtml = '';
+    messages.forEach( ({ name, message }) => {
+        messagesHtml +=`
+            <li>
+                <p>
+                    <span class="text-primary"> ${ name } </span>
+                    <span >${ message }</span>
+                </p>
+            </li>
+        `;
+    });
+
+    ulMessages.innerHTML = messagesHtml;
+}
+
+txtMessage.addEventListener('keyup', ({ keyCode })=>{
+    const message  = txtMessage.value;
+    const uid = txtUid.value;
+    if(keyCode!== 13){ return; }
+    if(message.length === 0){ return; }
+
+    socket.emit('send-message', {uid, message});
+
+    txtMessage.value = '';
+})
 
 const main = async()=>{
 

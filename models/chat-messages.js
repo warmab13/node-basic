@@ -13,7 +13,7 @@ class ChatMessages {
     }
 
     get lastTen(){
-        this.messages.splice(0,10);
+        this.messages = this.messages.splice(0,10);
         return this.messages;
     }
 
