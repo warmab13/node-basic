@@ -2,6 +2,12 @@ const url = (window.location.hostname.includes('localhost'))
             ? 'http://localhost:8080/api/auth/'
             : 'https://restserver-cnode.herokuapp.com/'
 
+const txtUid     = document.querySelector('#txtUid');
+const txtMessage = document.querySelector('#txtMessage');
+const ulUsers    = document.querySelector('#ulUsers');
+const ulMessages = document.querySelector('#ulMessages');
+const btnLogout  = document.querySelector('#btnLogout');
+
 let user = null;
 let socket = null;
 
@@ -29,11 +35,45 @@ const  validateJWT = async()=>{
 }
 
 const connectSocket = async()=>{
-    const socket = io({
+    socket = io({
         'extraHeaders':{
             'x-token': localStorage.getItem('token')
         }
     });
+
+    socket.on('connect', ()=>{
+        console.log('Sockets online');
+    });
+
+    socket.on('disconnect', ()=>{
+        console.log('Sockets offline');
+    });
+
+    socket.on('recieve-messages', ()=>{
+        // TODO:
+    })
+
+    socket.on('active-users', drawUsers)
+
+    socket.on('private-message', ()=>{
+        // TODO:
+    })
+}
+
+const drawUsers = ( users = [] ) =>{
+    let usersHtml = '';
+    users.forEach( ({ name, uid }) => {
+        usersHtml +=`
+            <li>
+                <p>
+                    <h5 class="text-success"> ${name} </h5>
+                    <span class="fs-6 text-muted">${ uid }</span>
+                </p>
+            </li>
+        `;
+    });
+
+    ulUsers.innerHTML = usersHtml;
 }
 
 const main = async()=>{
