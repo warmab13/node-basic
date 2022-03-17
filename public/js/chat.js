@@ -26,10 +26,11 @@ const  validateJWT = async()=>{
     })
 
     const { user: userDb, token: tokenDb } = await (await resp).json(); 
-    console.log(userDb, tokenDb);
+    console.log("User db", userDb);
+    console.log("tokenDb", tokenDb)
     localStorage.setItem('token', tokenDb);
     user = userDb;
-    document.title = user.name;
+    document.title = `${user.name} ${user.lastname}`;
 
     await connectSocket();
 }
@@ -60,12 +61,12 @@ const connectSocket = async()=>{
 
 const drawUsers = ( users = [] ) =>{
     let usersHtml = '';
-    users.forEach( ({ name, uid }) => {
+    users.forEach( ({ name, id }) => {
         usersHtml +=`
             <li>
                 <p>
                     <h5 class="text-success"> ${name} </h5>
-                    <span class="fs-6 text-muted">${ uid }</span>
+                    <span class="fs-6 text-muted">${ id }</span>
                 </p>
             </li>
         `;

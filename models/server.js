@@ -3,7 +3,6 @@ const cors = require('cors')
 const { dbConnection } = require('../database/config');
 const fileUpload = require('express-fileupload');
 const { socketController } = require('../sockets/socket.controller');
-
 class Server{
 
     constructor(){
@@ -24,7 +23,7 @@ class Server{
         }
 
         //Connect to database 
-        this.dbConnect();
+        //this.dbConnect();
 
         //Middlewares
         this.middlewares();
@@ -37,8 +36,9 @@ class Server{
     }
 
     async dbConnect(){
-        await dbConnection();
+        //await dbConnection();
     }
+
 
     middlewares(){
 

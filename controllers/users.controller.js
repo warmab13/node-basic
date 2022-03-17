@@ -1,6 +1,15 @@
 const {response, request} = require('express');
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
+const { PrismaClient } = require('@prisma/client')
+const prisma =  new PrismaClient();
+
+const usersGetPrisma = async (req = request, res = response)=>{
+    const allUsers = await prisma.users.findMany()
+    //console.log(allUsers)
+    res.json(allUsers)
+}
+
 
 const usersGet = async (req = request, res = response)=>{
     const { limit = 5, page = 0 } = req.query;
@@ -81,6 +90,7 @@ const usersDelete = async (req, res)=>{
 }
 
 module.exports = {
+    usersGetPrisma,
     usersGet,
     usersPut,
     usersPost,

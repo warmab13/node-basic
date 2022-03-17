@@ -9,7 +9,8 @@ const {
         hasRole
 } = require('../middlewares');
 
-const { usersGet, 
+const { usersGetPrisma,
+        usersGet, 
         usersPut, 
         usersPost, 
         usersDelete, 
@@ -17,6 +18,8 @@ const { usersGet,
 
 
 const router = Router();
+
+router.get('/prisma', usersGetPrisma);
 
 router.get('/', usersGet);
 

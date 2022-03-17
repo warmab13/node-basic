@@ -6,15 +6,20 @@ const form = document.querySelector('form');
 
 form.addEventListener('submit', ev =>{
     ev.preventDefault();
-    const formData = {};
+    let formData = {};
 
     //Como el boton no tiene name, es el que toma y agrega en un objeto el valor de cada input
     for(let el of form.elements){
         if(el.name.length > 0)
             formData[el.name] = el.value
     }
+    formData = {
+        email:"alonsosalcido13@gmail.com",
+        password: "Humandesire.13"
+    }
+    console.log("Formdata", formData)
 
-    fetch(url + 'login', {
+    fetch(url + 'loginhh', {
         method: 'POST',
         body: JSON.stringify( formData ),
         headers:{ 'Content-Type': 'application/json' }
@@ -24,9 +29,11 @@ form.addEventListener('submit', ev =>{
         if( msg !== 'Login ok' ){
             return console.error( msg );
         }
-
-        localStorage.setItem('token', token);
-        window.location = 'chat.html'
+        console.log(token)
+        let tok = token
+        localStorage.setItem('token', tok);
+        localStorage.setItem('cosa', "Cosadrsion");
+        location.replace('chat.html');
     })
     .catch( err =>{
         console.log(err)

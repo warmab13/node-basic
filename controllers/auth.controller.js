@@ -4,6 +4,10 @@ const { generateJWT } = require('../helpers/generate-jwt');
 
 const User = require('../models/user');
 const { googleVerify } = require('../helpers/google-verify');
+
+const { PrismaClient } = require('@prisma/client')
+const prisma =  new PrismaClient();
+
 const login = async ( req, res=response )=>{
 
     const { email, password } = req.body;
@@ -99,9 +103,69 @@ const googleSignIn = async( req, res = response )=>{
     }
 }
 
+const loginHotHorse = async ( req, res=response )=>{
+
+    const { email, password } = req.body;
+
+    try {
+
+        //Verify if Email exist
+
+        const user = await prisma.users.findUnique({
+            where: {
+                email: email
+            },
+        })
+
+        if( !user ){
+            return res.status(400).json({
+                msg: 'User or Password are not correct - email'
+            });
+        }
+
+        /*If user is active
+        if( !user.status ){
+            return res.status(400).json({
+                msg: 'User or Password are not correct - status:false'
+            });
+        }*/
+        //Verify password
+
+        /*const validPassword = bcryptjs.compareSync(password, user.password);
+        if( !validPassword ){
+            return res.status(400).json({
+                msg: 'User or Password are not correct - password'
+            });
+        }*/
+
+        //Generar JWT
+
+        const token = await generateJWT( user.id );
+        const updateUser = await prisma.users.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                chat_tokens: JSON.stringify(token),
+            },
+        })
+
+        res.json({
+            msg: 'Login ok',
+            user,token
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: `Talk with the administrator`
+        })
+    }
+}
+
 const renewToken = async (req, res = response )=>{
 
     const { user } = req;
+    //console.log("Renew token ", user)
 
     const token = await generateJWT( user.id )
 
@@ -112,5 +176,6 @@ const renewToken = async (req, res = response )=>{
 module.exports = {
     login,
     googleSignIn,
-    renewToken
+    renewToken,
+    loginHotHorse
 }

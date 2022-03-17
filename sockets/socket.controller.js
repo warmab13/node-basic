@@ -7,7 +7,6 @@ const chatMessages = new ChatMessages();
 const socketController = async( socket = new Socket, io )=>{
     
     //console.log('Client connected', socket.id)
-    console.log(socket.handshake.headers['x-token']);
     const token = socket.handshake.headers['x-token'];
     const user = await verifyJWT(token);
     if( !user ){
@@ -33,7 +32,7 @@ const socketController = async( socket = new Socket, io )=>{
             //si existe el uid es un mensaje privado, en caso contrario es para todo el mundo
             socket.to(uid).emit('private-message', { from: user.name, message });
         }else{
-            console.log("data", uid + ' ' + message)
+            //console.log("data", uid + ' ' + message)
             chatMessages.sendMessage( user.id,  user.name, message);
             io.emit('recieve-messages', chatMessages.lastTen); 
         }
